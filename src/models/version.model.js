@@ -21,6 +21,6 @@ const versionSchema = new Schema(
     {
         timestamps:true
     }
-)
+);
 
 export const Version = mongoose.model("Version", versionSchema) 

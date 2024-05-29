@@ -31,7 +31,8 @@ const userSchema = new Schema(
                 enum: ['owner', 'editor', 'member']
             },
             default: {}
-        }, // Assign the role to the project in the user's projectRoles map:
+        }, 
+        // Assign the role to the project in the user's projectRoles map:
         //user.projectRoles.set(projectId, role);
     },
     {

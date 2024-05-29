@@ -24,6 +24,6 @@ const contentSchema = new Schema(
     {
         timestamps:true
     }
-)
+);
 
 export const Content = mongoose.model("Content", contentSchema);
