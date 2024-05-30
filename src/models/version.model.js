@@ -8,15 +8,15 @@ const versionSchema = new Schema(
             ref: 'User',
             required: true
         },
-        file_path: 
+        filePath: 
         {
             type: String,
             required: true
-        },
-        approved: 
-        {
-            type: Boolean,
         }
+        // approved: 
+        // {
+        //     type: Boolean
+        // },
     },
     {
         timestamps:true

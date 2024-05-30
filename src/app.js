@@ -19,4 +19,13 @@ app.use(cookieParser());
 
 // This is middleware configuration
 
+//routes import
+import userRouter from './routes/user.routes.js'
+
+// routes declaration
+app.use("/api/v1/user", userRouter) // whenever someone requests "/users", control will be with the userRouter
+
+// now when I go to http://localhost:8000/api/v1/user, I will see "Hello from home controller"
+// http://localhost:8000/api/v1/user/register => "Hello from Register Controller"
+
 export { app };

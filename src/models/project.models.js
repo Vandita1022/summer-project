@@ -28,6 +28,15 @@ const projectSchema = new Schema(
                 }
             }
         ],
+        comments:
+        [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Comment'
+            }
+        ],
+        //[{{user},{role}}] 
+        // [user:role]
         isReleased:
         {
             type:Boolean
