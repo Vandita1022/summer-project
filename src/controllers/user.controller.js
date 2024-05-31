@@ -15,7 +15,6 @@ const home = asyncHandler(async (req, res) => {
 User will provide username, email and password
 */
 const registerUser = asyncHandler(async (req, res) => {
-    console.log(req.body)
     const { username, email, password } = req.body;
     //username unique error (400)
     const userExists = await User.findOne({ email })
@@ -33,7 +32,7 @@ const registerUser = asyncHandler(async (req, res) => {
     res
         .status(201).json({ msg: "User Created Succesfully", user: userCreated, token: await userCreated.generateToken() })
 
-})
+}) //works
 
 export default { home, registerUser }
 

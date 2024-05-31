@@ -32,7 +32,7 @@ const createProject = asyncHandler(async (req, res) => {
     await user.save()
 
     res.status(201).json({ msg: "Project Created Succesfully", project: newProject })
-})
+}) // works
 
 // Join project and assign roles
 const joinProject = asyncHandler(async (req, res) => {
@@ -56,7 +56,6 @@ const joinProject = asyncHandler(async (req, res) => {
     }
 
     const memberIndex = project.members.findIndex(member => member.userId.toString() === userId.toString())
-    console.log(`\n${memberIndex}`)
     //array.findIndex(testFunction) : method in JS => to find the index of the first element in an array that satisfies a given test function.
     //If no elements pass the test, it returns -1.
 
@@ -76,8 +75,8 @@ const joinProject = asyncHandler(async (req, res) => {
     await user.save()
     await project.save()
 
-    res.status(200).json({ msg: "User added/updated in project successfully", project });
-})
+    res.status(200).json({ msg: "User added and updated in project successfully", project });
+}) // works
 
 
 export default { createProject, joinProject }
