@@ -8,6 +8,10 @@ const router = Router();
 router.route("/create").post(projectController.createProject);
 
 // Route to join a project
-router.route("/join").post(projectController.joinProject);
+router.route("/join").post(projectController.joinProject).get(asyncHandler(async (req, res) => {
+    res
+        .status(200)
+        .send("Hello from Join Project Controller")
+}))
 
 export default router;

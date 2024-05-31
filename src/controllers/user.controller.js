@@ -17,7 +17,7 @@ User will provide username, email and password
 const registerUser = asyncHandler(async (req, res) => {
     console.log(req.body)
     const { username, email, password } = req.body;
-
+    //username unique error (400)
     const userExists = await User.findOne({ email })
     if (userExists) {
         return res.status(400).json({ msg: "email already exists" })

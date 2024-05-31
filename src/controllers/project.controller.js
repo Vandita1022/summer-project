@@ -37,9 +37,9 @@ const createProject = asyncHandler(async (req, res) => {
 // Join project and assign roles
 const joinProject = asyncHandler(async (req, res) => {
     // from frontend, we get userid, projectId, and (new) role
-    const { userid, projectId, role } = req.body
+    const { userId, projectId, role } = req.body
 
-    const user = await findById(userid)
+    const user = await User.findById(userId)
 
     if (!user) {
         return res.status(404).json({ msg: "User not found" })
@@ -51,18 +51,32 @@ const joinProject = asyncHandler(async (req, res) => {
         return res.status(404).json({ msg: "Project not found" })
     }
 
-    if (!['owner', 'editor', 'member'].include(role)) {
+    if (!['owner', 'editor', 'member'].includes(role)) {
         return res.status(404).json({ msg: "Role not found" })
     }
 
-    const memberIndex = project.members.findIndex(member => member.userId.toString() === userid.toString())
+    const memberIndex = project.members.findIndex(member => member.userId.toString() === userId.toString())
+    console.log(`\n${memberIndex}`)
     //array.findIndex(testFunction) : method in JS => to find the index of the first element in an array that satisfies a given test function.
     //If no elements pass the test, it returns -1.
+
+
+    user.projectRoles.set(project._id.toString(), role)
 
     if (memberIndex !== -1) {
         // member already exists: update role
         project.members[memberIndex].role = role
     }
+
+    else {
+        // Add new member if user is not already a member
+        project.members.push({ userId, role });
+    }
+
+    await user.save()
+    await project.save()
+
+    res.status(200).json({ msg: "User added/updated in project successfully", project });
 })
 
 
