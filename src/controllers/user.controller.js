@@ -1,5 +1,6 @@
 import { asyncHandler } from "../utils/asynchandler.js";
 import { User } from "../models/user.model.js";
+
 //home logic goes here
 const home = asyncHandler(async (req, res) => {
     res
@@ -15,19 +16,24 @@ User will provide username, email and password
 */
 const registerUser = asyncHandler(async (req, res) => {
     console.log(req.body)
-    const {username, email, password} = req.body;
+    const { username, email, password } = req.body;
 
     const userExists = await User.findOne({ email })
-    if(userExists)
-    {
-        return res.status(400).json({msg:"email already exists"})
+    if (userExists) {
+        return res.status(400).json({ msg: "email already exists" })
     }
-    const userCreated = await User.create({username, email, password})
-    
+    const userCreated = await User.create(
+        {
+            username,
+            email,
+            password
+        }
+    )
+
     res
-        .status(200).json({userCreated})
+        .status(201).json({ msg: "User Created Succesfully", user: userCreated, token: await userCreated.generateToken() })
 
 })
 
-export default {home, registerUser}
+export default { home, registerUser }
 
