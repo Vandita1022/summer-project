@@ -2,24 +2,30 @@ import mongoose, { Schema } from "mongoose";
 
 const versionSchema = new Schema(
     {
-        uploadedBy: 
+        contentId:
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Content',
+            required: true
+        },
+        uploadedBy:
         {
             type: Schema.Types.ObjectId,
             ref: 'User',
             required: true
         },
-        filePath: 
+        filePath:
         {
             type: String,
             required: true
-        }
+        },
         // approved: 
         // {
         //     type: Boolean
         // },
     },
     {
-        timestamps:true
+        timestamps: true
     }
 );
 

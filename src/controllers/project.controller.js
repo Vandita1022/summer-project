@@ -32,7 +32,7 @@ const createProject = asyncHandler(async (req, res) => {
     await user.save()
 
     res.status(201).json({ msg: "Project Created Succesfully", project: newProject })
-})
+}) // works
 
 // Join project and assign roles
 const joinProject = asyncHandler(async (req, res) => {
@@ -56,7 +56,6 @@ const joinProject = asyncHandler(async (req, res) => {
     }
 
     const memberIndex = project.members.findIndex(member => member.userId.toString() === userId.toString())
-    console.log(`\n${memberIndex}`)
     //array.findIndex(testFunction) : method in JS => to find the index of the first element in an array that satisfies a given test function.
     //If no elements pass the test, it returns -1.
 
@@ -76,9 +75,74 @@ const joinProject = asyncHandler(async (req, res) => {
     await user.save()
     await project.save()
 
-    res.status(200).json({ msg: "User added/updated in project successfully", project });
-})
+    res.status(200).json({ msg: "User added and updated in project successfully", project });
+}) // works
 
+// Get project by project ID
+const getProjectById = asyncHandler(async (req, res) => {
+    const { projectId } = req.params;
 
-export default { createProject, joinProject }
+    const project = await Project.findById(projectId);
+    if (!project) {
+        return res.status(404).json({ msg: "Project not found" });
+    }
+
+    res.status(200).json(project);
+});
+
+// Update project
+const updateProject = asyncHandler(async (req, res) => {
+    const { projectId } = req.params;
+    const { userId, name, description } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+        return res.status(404).json({ msg: "User not found" });
+    }
+
+    const project = await Project.findById(projectId);
+    if (!project) {
+        return res.status(404).json({ msg: "Project not found" });
+    }
+
+    const userRole = user.projectRoles.get(projectId.toString());
+    if (userRole !== 'owner') {
+        return res.status(403).json({ msg: "Permission Denied" });
+    }
+
+    project.name = name || project.name;
+    project.description = description || project.description;
+
+    await project.save();
+
+    res.status(200).json({ msg: "Project updated successfully", project });
+});
+
+// Delete project
+const deleteProject = asyncHandler(async (req, res) => {
+    const { projectId } = req.params;
+    const { userId } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+        return res.status(404).json({ msg: "User not found" });
+    }
+
+    const project = await Project.findById(projectId);
+    if (!project) {
+        return res.status(404).json({ msg: "Project not found" });
+    }
+
+    const userRole = user.projectRoles.get(projectId.toString());
+    if (userRole !== 'owner') {
+        return res.status(403).json({ msg: "Permission Denied" });
+    }
+
+    await project.remove();
+
+    res.status(200).json({ msg: "Project deleted successfully" });
+});
+
+export default { createProject, joinProject, getProjectById, updateProject, deleteProject };
+
 
