@@ -11,12 +11,7 @@ const router = Router();
 router.route("/create").post(projectControllers.createProject);
 
 // Route to join a project
-router.route("/join").post(projectControllers.joinProject).get(asyncHandler(async (req, res) => {
-    res
-        .status(200)
-        .send("Hello from Join Project Controller")
-}))
-
+router.route("/join").post(projectControllers.joinProject)
 // get project by project ID
 // update a project
 // delete a project
