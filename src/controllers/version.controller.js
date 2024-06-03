@@ -3,11 +3,20 @@ import { Version } from "../models/version.model.js";
 import { Content } from "../models/content.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import multer from "multer";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const createVersion = asyncHandler(async (req, res) => {
-    const { filePath } = req.body;
     const { contentId } = req.params;
     const userId = req.user._id;
+
+    const fileLocalPath = req.files?.file[0]?.path
+
+    const file = await uploadOnCloudinary(fileLocalPath)
+
+    // if(!file){
+    //     throw new ApiError(500, "File Upload Failed")
+    // }
 
     const content = await Content.findById(contentId);
     if (!content) {
@@ -22,7 +31,7 @@ const createVersion = asyncHandler(async (req, res) => {
     const newVersion = await Version.create({
         contentId: contentId,
         uploadedBy: userId,
-        filePath: filePath
+        filePath: file?.url || ""
     });
 
     content.versions.push(newVersion._id);
@@ -55,8 +64,11 @@ const getVersionById = asyncHandler(async (req, res) => {
 
 const updateVersion = asyncHandler(async (req, res) => {
     const { versionId } = req.params;
-    const { filePath } = req.body;
     const userId = req.user._id;
+
+    const fileLocalPath = req.files?.file[0]?.path
+
+    const file = await uploadOnCloudinary(fileLocalPath)
 
     const version = await Version.findById(versionId);
     if (!version) {
@@ -74,7 +86,7 @@ const updateVersion = asyncHandler(async (req, res) => {
     }
 
     version.uploadedBy = userId;
-    version.filePath = filePath;
+    version.filePath = file?.url || "";
     await version.save();
 
     res.status(200).json(new ApiResponse(200, { version }, "Version updated successfully"));

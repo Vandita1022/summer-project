@@ -67,7 +67,7 @@ const registerUser = asyncHandler(async (req, res) => {
         .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
         .json(new ApiResponse(201, createdUser, "User registered successfully"));
-});
+}); // works : A
 
 /**
  * Controller for user login
@@ -101,7 +101,7 @@ const loginUser = asyncHandler(async (req, res) => {
         .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
         .json(new ApiResponse(200, { user: loggedInUser, accessToken, refreshToken }, "User logged in successfully"));
-});
+}); // works A
 
 /**
  * Controller for user logout
@@ -129,7 +129,7 @@ const logoutUser = asyncHandler(async (req, res) => {
         .clearCookie("accessToken", options)
         .clearCookie("refreshToken", options)
         .json(new ApiResponse(200, {}, "User logged out"));
-});
+}); 
 
 /**
  * Controller to refresh the access token using the refresh token
@@ -193,8 +193,11 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
  * Controller to get the current logged in user
  */
 const getCurrentUser = asyncHandler(async (req, res) => {
+    if(!req.user){
+        throw new error(404, "User not found")
+    }
     return res.status(200).json(new ApiResponse(200, req.user, "User fetched successfully"));
-});
+}); // works
 
 /**
  * Controller to update the account details of the current user

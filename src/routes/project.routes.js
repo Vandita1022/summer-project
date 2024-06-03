@@ -3,6 +3,9 @@ import projectControllers from "../controllers/project.controller.js";
 import { asyncHandler } from "../utils/asynchandler.js";
 import { verifyToken } from "../middlewares/auth.middleware.js"; // Assuming you have an authentication middleware
 
+//route import:
+import contentRouter from "./content.routes.js"
+
 const router = Router();
 
 // Route to create a project
@@ -22,5 +25,8 @@ router.route("/:projectId").delete(verifyToken, asyncHandler(projectControllers.
 
 // Route to get all projects with pagination
 router.route("/").get(verifyToken, asyncHandler(projectControllers.getAllProjects));
+
+// Mount content routes
+router.use("/:projectId/content", verifyToken , contentRouter)
 
 export default router;
