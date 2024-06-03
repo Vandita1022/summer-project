@@ -1,18 +1,23 @@
 import { Router } from "express";
 import contentControllers from "../controllers/content.controller.js";
-import versionRouter from "./version.routes.js";
-import auth from "../middlewares/auth.js";
+import { asyncHandler } from "../utils/asynchandler.js";
+import { verifyToken } from "../middlewares/auth.middleware.js"; // Assuming you have an authentication middleware
 
-const router = Router({ mergeParams: true });
+const router = Router();
 
-router.use(auth); // Apply authentication middleware for all content routes
+// Route to get all content for a project
+router.route("/:projectId").get(verifyToken, asyncHandler(contentControllers.getAllContent));
 
-router.get("/", contentControllers.getAllContent);
-router.post("/", contentControllers.createContent);
-router.get("/:contentId", contentControllers.getContentById);
-router.put("/:contentId", contentControllers.updateContent);
-router.delete("/:contentId", contentControllers.deleteContent);
+// Route to create content for a project
+router.route("/:projectId").post(verifyToken, asyncHandler(contentControllers.createContent));
 
-router.use("/:contentId/versions", versionRouter);
+// Route to get content by ID
+router.route("/:projectId/:contentId").get(verifyToken, asyncHandler(contentControllers.getContentById));
+
+// Route to update content by ID
+router.route("/:projectId/:contentId").put(verifyToken, asyncHandler(contentControllers.updateContent));
+
+// Route to delete content by ID
+router.route("/:projectId/:contentId").delete(verifyToken, asyncHandler(contentControllers.deleteContent));
 
 export default router;
